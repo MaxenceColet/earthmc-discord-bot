@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.1",
-    "earthmc": "^1.8.1"
+    "earthmc": "^1.8.1",
+    "lodash": "^4.17.21",
+    "mongodb": "^3.6.5"
   }
 }

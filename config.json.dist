@@ -1,0 +1,13 @@
+{
+  "botLogin": "",
+  "cacheToken": "",
+  "mongo": {
+    "host": "localhost",
+    "port": 27017,
+    "auth": {
+      "user": "",
+      "password": ""
+    },
+    "database": ""
+  }
+}
