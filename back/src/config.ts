@@ -1,6 +1,9 @@
 import {merge} from 'lodash';
 
 const defaultConfig = {
+  application: {
+    port: 3584
+  },
   botLogin: '',
   cacheToken: '',
   mongo: {
@@ -11,6 +14,9 @@ const defaultConfig = {
       password: '',
     },
     database: '',
+    collections: {
+      players: 'players'
+    }
   },
 };
 

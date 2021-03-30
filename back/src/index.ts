@@ -1,12 +1,24 @@
 import {mongo} from './db';
-import * as discordBot from './bot';
+import * as emcBot from './emcBot';
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
+import { config } from './config';
+
+const app = express();
+app.use(bodyParser.json());
+app.use(cors({origin: '*'}));
+
+app.use('/homeless', require('./routes/homeless.route'))
 
 const init = async () => {
   await mongo.connect();
-  await discordBot.init();
-
-  // test command
-  discordBot.saveNearest();
+  await emcBot.init();
 };
 
-init();
+init().then(() => {
+  app.listen(config.application.port, () => {
+    console.log(`Listening to port ${config.application.port}`)
+  })
+});
+
