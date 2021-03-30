@@ -13,6 +13,7 @@ app.use('/homeless', require('./routes/homeless.route'));
 app.use('/strangers', require('./routes/strangers.route'));
 app.use('/history', require('./routes/history.route'));
 app.use('/beacons', require('./routes/beacons.route'));
+app.use('/players', require('./routes/players.route'));
 
 const init = async () => {
   await mongo.connect();

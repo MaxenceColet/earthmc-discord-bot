@@ -1,5 +1,5 @@
 import {mongo} from './db';
-import * as emc from 'earthmc';
+import * as emc from './controllers/emc.controller';
 import * as Discord from 'discord.js';
 import {omit} from 'lodash';
 import {EmcPlayer, HomelessPlayer, StrangerPlayer} from './interfaces/player.interface';
@@ -31,10 +31,8 @@ export const saveNearest = async () => {
   const current = await getCurrent();
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    allPlayers = await emc.getAllPlayers(emc);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    homelessPlayers = await emc.getTownless(emc);
+    allPlayers = await emc.getAllPlayers();
+    homelessPlayers = await emc.getTownless();
   } catch (err) {
     console.log(err);
     throw err;

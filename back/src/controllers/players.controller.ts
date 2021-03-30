@@ -1,6 +1,7 @@
 import {config} from '../config';
+import * as emc from './emc.controller';
 import {mongo} from '../db';
-import {HomelessPlayer, StrangerPlayer} from '../interfaces/player.interface';
+import {EmcPlayer, HomelessPlayer, StrangerPlayer} from '../interfaces/player.interface';
 import {getPingTime} from '../emcBot';
 import {calcDbDistance} from '../helpers/math';
 
@@ -31,4 +32,13 @@ export const getHistory = async () => {
     },
   });
   return allPlayers.map(p => ({...p, distance: calcDbDistance(config.townCoordinates, p)}));
+};
+
+export const getTownInhabitants = async (townName: string) => {
+  const allPlayers = await emc.getAllPlayers();
+  return allPlayers.filter(p => p.town === townName);
+};
+
+export const getConnectedTownInhabitants = async (townName: string): Promise<Array<EmcPlayer>> => {
+  return (await getTownInhabitants(townName)).filter(p => p.x != null);
 };
