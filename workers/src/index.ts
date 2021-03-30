@@ -1,5 +1,5 @@
 import {mongo} from './helpers/mongo.helper';
-import {initTownBeaconJobs} from './jobs';
+import {initPlayerBeaconJobs, initTownBeaconJobs} from './jobs';
 
 export const init = async () => {
   console.log('Connecting to MongoDB...');
@@ -8,11 +8,13 @@ export const init = async () => {
   if (process.env.NODE_ENV === 'dev') {
     console.log('Starting a specific command');
     initTownBeaconJobs();
+    initPlayerBeaconJobs();
   } else {
     console.log('Starting every job loop...');
     initTownBeaconJobs();
+    initPlayerBeaconJobs();
     console.log('Done!');
   }
 };
 
-init()
+init();

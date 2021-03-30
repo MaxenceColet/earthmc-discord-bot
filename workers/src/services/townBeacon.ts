@@ -3,16 +3,13 @@ import * as emc from '../helpers/emc.helper';
 import {omit} from 'lodash';
 import {EmcPlayer, HomelessPlayer, StrangerPlayer} from '../interfaces/player.interface';
 import {config} from '../config';
-import {calcEmcDistance} from '../helpers/math.helper';
 
-export const getPingTime = () => new Date(Date.now() - 60 * 1000);
 
-const isClose = (player: EmcPlayer) => calcEmcDistance(config.townCoordinates, player) < config.threshold;
 
 const getCurrent = async (): Promise<Array<string>> => {
   return (
     await mongo.find<HomelessPlayer | StrangerPlayer>(config.mongo.collections.players, {
-      pingTime: {$gte: getPingTime()},
+      pingTime: {$gte: new Date(Date.now() - 60 * 1000)},
     })
   ).map(player => player.name);
 };
@@ -30,8 +27,8 @@ export const saveNearest = async () => {
     console.log(err);
     throw err;
   }
-  const external = allPlayers.filter(player => isClose(player) && player.town !== 'Svetlograd');
-  const homeless = homelessPlayers.filter(isClose);
+  const external = allPlayers.filter(player => emc.isClose(player) && player.town !== 'Svetlograd');
+  const homeless = homelessPlayers.filter(p => emc.isClose(p));
   const players = [...external, ...homeless];
 
   console.log(`Joueurs récupérés : ${players.map(p => p.name)}`);
