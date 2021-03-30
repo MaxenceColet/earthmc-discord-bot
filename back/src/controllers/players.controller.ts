@@ -12,3 +12,13 @@ export const getActiveHomeless = async () => {
   });
   return allPlayers;
 };
+
+export const getActiveStrangers = async () => {
+  const allPlayers = mongo.find<HomelessPlayer>(config.mongo.collections.players, {
+    town: {$ne: undefined},
+    pingTime: {
+      $gte: getPingTime(),
+    },
+  });
+  return allPlayers;
+};

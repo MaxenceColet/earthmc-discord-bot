@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use(cors({origin: '*'}));
 
 app.use('/homeless', require('./routes/homeless.route'));
+app.use('/strangers', require('./routes/strangers.route'));
 
 const init = async () => {
   await mongo.connect();
