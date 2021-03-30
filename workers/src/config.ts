@@ -1,6 +1,7 @@
 import {merge} from 'lodash';
 
 const defaultConfig = {
+  threshold: 2000,
   townCoordinates: {
     x: 0,
     y: 0,
