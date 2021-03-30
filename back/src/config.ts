@@ -21,6 +21,7 @@ const defaultConfig = {
     database: '',
     collections: {
       players: 'players',
+      beacons: 'beacons',
     },
   },
 };

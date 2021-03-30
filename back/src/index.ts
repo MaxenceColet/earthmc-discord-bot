@@ -12,6 +12,7 @@ app.use(cors({origin: '*'}));
 app.use('/homeless', require('./routes/homeless.route'));
 app.use('/strangers', require('./routes/strangers.route'));
 app.use('/history', require('./routes/history.route'));
+app.use('/beacons', require('./routes/beacons.route'));
 
 const init = async () => {
   await mongo.connect();

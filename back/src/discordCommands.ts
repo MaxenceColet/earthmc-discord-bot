@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import * as emc from 'earthmc';
-import {EmcPlayer} from './player.interface';
+import {EmcPlayer} from './interfaces/player.interface';
 
 export const noTown = async (): Promise<string> => {
   return (await emc.getTownless()).map((p: EmcPlayer) => p.name).join('  ');

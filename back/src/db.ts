@@ -100,8 +100,6 @@ class MongoClient {
   }
 
   async upsert<T>(collection: string, filter: mongodb.FilterQuery<T>, data: T) {
-    const d = new Date();
-    Object.assign(data, {createdAt: d, updatedAt: d});
     return this.db.collection(collection).updateOne(filter, {$set: data}, {upsert: true});
   }
 

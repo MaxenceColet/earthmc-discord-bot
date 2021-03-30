@@ -2,7 +2,7 @@ import {mongo} from './db';
 import * as emc from 'earthmc';
 import * as Discord from 'discord.js';
 import {omit} from 'lodash';
-import {EmcPlayer, HomelessPlayer, StrangerPlayer} from './player.interface';
+import {EmcPlayer, HomelessPlayer, StrangerPlayer} from './interfaces/player.interface';
 import {getPlayers, noTown} from './discordCommands';
 import {config} from './config';
 import { calcEmcDistance } from './helpers/math';

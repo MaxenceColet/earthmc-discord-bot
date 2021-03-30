@@ -1,4 +1,4 @@
-import {Coordinates, DbPlayer, EmcPlayer} from '../player.interface';
+import {Coordinates, DbPlayer, EmcPlayer} from '../interfaces/player.interface';
 
 export const calcDbDistance = (source: Coordinates, player: DbPlayer) => {
   const latestCoords = player.coords[player.coords.length - 1];
