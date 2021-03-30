@@ -24,4 +24,11 @@ export const getActiveStrangers = async () => {
   return allPlayers.map(p => ({...p, distance: calcDbDistance(config.townCoordinates, p)}));
 };
 
-export const getHistory = async () => {};
+export const getHistory = async () => {
+  const allPlayers = await mongo.find<StrangerPlayer>(config.mongo.collections.players, {
+    pingTime: {
+      $lte: getPingTime(),
+    },
+  });
+  return allPlayers.map(p => ({...p, distance: calcDbDistance(config.townCoordinates, p)}));
+};
