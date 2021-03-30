@@ -4,6 +4,11 @@ const defaultConfig = {
   application: {
     port: 3584,
   },
+  townCoordinates: {
+    x: 0,
+    y: 0,
+    z: 0,
+  },
   botLogin: '',
   cacheToken: '',
   mongo: {

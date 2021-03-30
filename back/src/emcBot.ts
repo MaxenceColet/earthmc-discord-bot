@@ -5,21 +5,16 @@ import {omit} from 'lodash';
 import {EmcPlayer, HomelessPlayer, StrangerPlayer} from './player.interface';
 import {getPlayers, noTown} from './discordCommands';
 import {config} from './config';
+import { calcEmcDistance } from './helpers/math';
 
 let bot;
-
-const Svetlo = {
-  x: 18758,
-  z: -12697,
-};
 
 const THRESHOLD = 2000;
 // const periodicity = 10000;
 
 export const getPingTime = () => new Date(Date.now() - 60 * 1000);
 
-const isClose = (player: EmcPlayer) =>
-  Math.abs(Svetlo.x - player.x) < THRESHOLD && Math.abs(Svetlo.z - player.z) < THRESHOLD;
+const isClose = (player: EmcPlayer) => calcEmcDistance(config.townCoordinates, player) < THRESHOLD
 
 const getCurrent = async (): Promise<Array<string>> => {
   return (
