@@ -30,3 +30,7 @@ export const deactivateBeacon = async (playerName: string) => {
     },
   );
 };
+
+export const getProximity = async (playerName: string) => {
+  return mongo.findOne<Beacon>(config.mongo.collections.beacons, {playerName});
+};
