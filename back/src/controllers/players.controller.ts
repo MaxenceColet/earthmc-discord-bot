@@ -1,6 +1,6 @@
 import {config} from '../config';
 import * as emc from './emc.controller';
-import {mongo} from '../db';
+import {mongo} from '../helpers/mongo';
 import {EmcPlayer, HomelessPlayer, StrangerPlayer} from '../interfaces/player.interface';
 import {getPingTime} from '../emcBot';
 import {calcDbDistance} from '../helpers/math';

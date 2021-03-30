@@ -1,4 +1,4 @@
-import {mongo} from './db';
+import {mongo} from './helpers/mongo';
 import * as emc from './controllers/emc.controller';
 import * as Discord from 'discord.js';
 import {omit} from 'lodash';

@@ -1,4 +1,4 @@
-import {mongo} from './db';
+import {mongo} from './helpers/mongo';
 import * as emcBot from './emcBot';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';

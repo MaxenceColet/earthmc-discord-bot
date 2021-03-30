@@ -1,5 +1,5 @@
 import * as mongodb from 'mongodb';
-import {config} from './config';
+import {config} from '../config';
 
 const generateConnectionUrl = (options: typeof config.mongo) =>
   `mongodb://${options.auth.user}:${encodeURIComponent(options.auth.password)}@${options.host}:${options.port}`;

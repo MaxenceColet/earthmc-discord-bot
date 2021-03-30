@@ -1,0 +1,18 @@
+{
+  "townCoordinates": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+  },
+  "botLogin": "",
+  "cacheToken": "",
+  "mongo": {
+    "host": "localhost",
+    "port": 27017,
+    "auth": {
+      "user": "",
+      "password": ""
+    },
+    "database": ""
+  }
+}

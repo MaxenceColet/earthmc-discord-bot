@@ -1,5 +1,5 @@
 import {config} from '../config';
-import {mongo} from '../db';
+import {mongo} from '../helpers/mongo';
 import {Beacon} from '../interfaces/beacons.interface';
 
 export const activateBeacon = async (playerName: string) => {
