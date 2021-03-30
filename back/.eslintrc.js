@@ -146,6 +146,12 @@ module.exports = {
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    'no-underscore-dangle': 'off'
+    '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/no-extra-non-null-assertion': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
+    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
+    'no-console': 'off',
+    'no-underscore-dangle': 'off',
   },
 };

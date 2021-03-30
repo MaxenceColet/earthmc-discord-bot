@@ -2,7 +2,7 @@ import {merge} from 'lodash';
 
 const defaultConfig = {
   application: {
-    port: 3584
+    port: 3584,
   },
   botLogin: '',
   cacheToken: '',
@@ -15,10 +15,9 @@ const defaultConfig = {
     },
     database: '',
     collections: {
-      players: 'players'
-    }
+      players: 'players',
+    },
   },
 };
-
 
 export const config: typeof defaultConfig = merge(defaultConfig, require('../config'));

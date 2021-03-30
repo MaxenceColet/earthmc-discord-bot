@@ -31,19 +31,21 @@ const getCurrent = async (): Promise<Array<string>> => {
 
 export const saveNearest = async () => {
   let allPlayers: Array<EmcPlayer>;
-  let noTown: Array<EmcPlayer>;
+  let homelessPlayers: Array<EmcPlayer>;
 
   const current = await getCurrent();
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     allPlayers = await emc.getAllPlayers(emc);
-    noTown = await emc.getTownless(emc);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    homelessPlayers = await emc.getTownless(emc);
   } catch (err) {
     console.log(err);
     throw err;
   }
-  const external = allPlayers.filter(player => isClose(player) && player.town != 'Svetlograd');
-  const homeless = noTown.filter(isClose);
+  const external = allPlayers.filter(player => isClose(player) && player.town !== 'Svetlograd');
+  const homeless = homelessPlayers.filter(isClose);
   const players = [...external, ...homeless];
 
   console.log(`Joueurs récupérés : ${players.map(p => p.name)}`);
@@ -52,14 +54,11 @@ export const saveNearest = async () => {
   const newOnes = players.filter(p => !current.includes(p.name));
 
   // LeftOnes : Ceux qui sont dans current mais pas dans players
-  const leftOnes = current.filter(c => !players.find(p => p.name === c));
+  // const leftOnes = current.filter(c => !players.find(p => p.name === c));
 
   // Remaining : Ceux qui sont dans players et dans current
   const remaining = players.filter(p => current.includes(p.name)).map(p => p.name);
 
-  if (leftOnes.length) {
-    console.log(`Les joueurs (${leftOnes}) joueurs ont quitté la zone depuis le dernier ping`);
-  }
   if (newOnes.length) {
     console.log(`${newOnes.length} joueurs sont entrés dans la zone`);
     const d = new Date();
@@ -82,7 +81,7 @@ export const saveNearest = async () => {
   if (remaining.length) {
     console.log(`${remaining.length} joueurs sont restés dans la zone`);
     for (const player of remaining) {
-      const playerObject = players.find(p => p.name === player)!!;
+      const playerObject = players.find(p => p.name === player);
       await mongo.updateMany(
         config.mongo.collections.players,
         {name: player},
@@ -91,9 +90,9 @@ export const saveNearest = async () => {
           $set: {pingTime: new Date()},
           $push: {
             coords: {
-              x: playerObject.x,
-              y: playerObject.y,
-              z: playerObject.z,
+              x: playerObject!!.x,
+              y: playerObject!!.y,
+              z: playerObject!!.z,
             },
           },
         },
@@ -107,7 +106,7 @@ export const init = () => {
   return new Promise<void>((resolve, _reject) => {
     bot = new Discord.Client();
 
-    bot.on('ready', function () {
+    bot.on('ready', () => {
       console.log('Je suis connecté !');
       resolve();
     });
@@ -116,19 +115,23 @@ export const init = () => {
     //   setInterval(saveNearest, periodicity);
     // });
 
-    bot.login(config.botLogin);
+    bot.login(config.botLogin).then(() => {
+      console.log('Connecté !');
+    });
 
-    bot.on('message', async function (message) {
-      switch (message.content) {
-        case '!online':
-          message.reply(await getPlayers());
-          return;
-        case '!notown':
-          message.reply(await noTown());
-          return;
-        default:
-          return;
-      }
+    bot.on('message', message => {
+      (async () => {
+        switch (message.content) {
+          case '!online':
+            message.reply(await getPlayers());
+            return;
+          case '!notown':
+            message.reply(await noTown());
+            return;
+          default:
+            return;
+        }
+      })();
     });
   });
 };

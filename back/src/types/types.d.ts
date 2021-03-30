@@ -1,1 +1,1 @@
-declare module 'earthmc'
+declare module 'earthmc';
