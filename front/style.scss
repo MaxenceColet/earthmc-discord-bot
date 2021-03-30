@@ -1,0 +1,41 @@
+html, body{
+    padding: 0;
+    margin: 0;
+    background-color: #dedede;
+}
+body{
+    display: flex;
+}
+.radars{
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
+    .radar{
+        background-color: #fff;
+        padding: 20px;
+        font-family: 'Poppins';
+        width: 550px;
+        margin: 20px;
+
+        h2{
+            margin-top: 0;
+        }
+
+        &_table{
+            width: 100%;
+        }
+        &_row{
+            display: flex;
+            justify-content: space-between;
+            height: 25px;
+            background-color: #eee;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 8px;
+            margin: 5px 0;
+            .distance{
+                font-weight: 600;
+            }
+        }
+    }
+}
