@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "lint": "eslint src/**/*.ts && prettier --check src/**/*.ts",
+    "lint:fix": "eslint --fix && prettier --write src/**/*.ts",
+    "start": "node dist/index.js",
+    "start:dev": "nodemon"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +19,19 @@
     "earthmc": "^1.8.1",
     "lodash": "^4.17.21",
     "mongodb": "^3.6.5"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.168",
+    "@types/mongodb": "^3.6.10",
+    "@types/ws": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/parser": "^4.20.0",
+    "eslint": "^7.23.0",
+    "eslint-plugin-jsdoc": "^32.3.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
   }
 }
