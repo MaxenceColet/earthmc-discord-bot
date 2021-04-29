@@ -1,9 +1,7 @@
 import {merge} from 'lodash';
 
 const defaultConfig = {
-  application: {
-    port: 3584,
-  },
+  threshold: 2000,
   townCoordinates: {
     x: 0,
     y: 0,

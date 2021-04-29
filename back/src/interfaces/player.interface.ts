@@ -23,6 +23,8 @@ export interface HomelessPlayer extends BasePlayer {
   coords: Array<Coordinates>;
 }
 
+export type DbPlayer = HomelessPlayer | StrangerPlayer;
+
 export interface EmcPlayer extends BasePlayer {
   x: number;
   y: number;

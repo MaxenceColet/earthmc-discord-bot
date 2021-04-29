@@ -1,30 +1,24 @@
-import {mongo} from './db';
-import * as emc from 'earthmc';
+import {mongo} from './helpers/mongo';
+import * as emc from './controllers/emc.controller';
 import * as Discord from 'discord.js';
 import {omit} from 'lodash';
-import {inspect} from 'util';
-import {EmcPlayer, HomelessPlayer, StrangerPlayer} from './player.interface';
-import {getPlayers, noTown} from './commands';
-import { config } from './config';
+import {EmcPlayer, HomelessPlayer, StrangerPlayer} from './interfaces/player.interface';
+import {getPlayers, noTown} from './discordCommands';
+import {config} from './config';
+import { calcEmcDistance } from './helpers/math';
 
 let bot;
 
-const Svetlo = {
-  x: 18758,
-  z: -12697,
-};
-
 const THRESHOLD = 2000;
-const periodicity = 10000;
+// const periodicity = 10000;
 
-const getPingTime = () => new Date(Date.now() - 60 * 1000);
+export const getPingTime = () => new Date(Date.now() - 60 * 1000);
 
-const isClose = (player: EmcPlayer) =>
-  Math.abs(Svetlo.x - player.x) < THRESHOLD && Math.abs(Svetlo.z - player.z) < THRESHOLD;
+const isClose = (player: EmcPlayer) => calcEmcDistance(config.townCoordinates, player) < THRESHOLD
 
 const getCurrent = async (): Promise<Array<string>> => {
   return (
-    await mongo.find<HomelessPlayer | StrangerPlayer>('players', {
+    await mongo.find<HomelessPlayer | StrangerPlayer>(config.mongo.collections.players, {
       pingTime: {$gte: getPingTime()},
     })
   ).map(player => player.name);
@@ -32,20 +26,19 @@ const getCurrent = async (): Promise<Array<string>> => {
 
 export const saveNearest = async () => {
   let allPlayers: Array<EmcPlayer>;
-  let noTown: Array<EmcPlayer>;
+  let homelessPlayers: Array<EmcPlayer>;
 
   const current = await getCurrent();
-  console.log(`\n\n\nDébut de contrôle: Current ${inspect(current)}`);
 
   try {
-    allPlayers = await emc.getAllPlayers(emc);
-    noTown = await emc.getTownless(emc);
+    allPlayers = await emc.getAllPlayers();
+    homelessPlayers = await emc.getTownless();
   } catch (err) {
     console.log(err);
     throw err;
   }
-  const external = allPlayers.filter(player => isClose(player) && player.town != 'Svetlograd');
-  const homeless = noTown.filter(isClose);
+  const external = allPlayers.filter(player => isClose(player) && player.town !== 'Svetlograd');
+  const homeless = homelessPlayers.filter(isClose);
   const players = [...external, ...homeless];
 
   console.log(`Joueurs récupérés : ${players.map(p => p.name)}`);
@@ -54,19 +47,16 @@ export const saveNearest = async () => {
   const newOnes = players.filter(p => !current.includes(p.name));
 
   // LeftOnes : Ceux qui sont dans current mais pas dans players
-  const leftOnes = current.filter(c => !players.find(p => p.name === c));
+  // const leftOnes = current.filter(c => !players.find(p => p.name === c));
 
   // Remaining : Ceux qui sont dans players et dans current
   const remaining = players.filter(p => current.includes(p.name)).map(p => p.name);
 
-  if (leftOnes.length) {
-    console.log(`Les joueurs (${leftOnes}) joueurs ont quitté la zone depuis le dernier ping`);
-  }
   if (newOnes.length) {
     console.log(`${newOnes.length} joueurs sont entrés dans la zone`);
     const d = new Date();
     await mongo.insertMany(
-      'players',
+      config.mongo.collections.players,
       newOnes.map(p =>
         omit(
           {
@@ -84,18 +74,18 @@ export const saveNearest = async () => {
   if (remaining.length) {
     console.log(`${remaining.length} joueurs sont restés dans la zone`);
     for (const player of remaining) {
-      const playerObject = players.find(p => p.name === player)!!;
+      const playerObject = players.find(p => p.name === player);
       await mongo.updateMany(
-        'players',
+        config.mongo.collections.players,
         {name: player},
         // On met à jour le pingTime du joueur trouvé
         {
           $set: {pingTime: new Date()},
           $push: {
             coords: {
-              x: playerObject.x,
-              y: playerObject.y,
-              z: playerObject.z,
+              x: playerObject!!.x,
+              y: playerObject!!.y,
+              z: playerObject!!.z,
             },
           },
         },
@@ -107,29 +97,34 @@ export const saveNearest = async () => {
 
 export const init = () => {
   return new Promise<void>((resolve, _reject) => {
-    console.log('init');
     bot = new Discord.Client();
 
-    bot.on('ready', function () {
+    bot.on('ready', () => {
       console.log('Je suis connecté !');
       resolve();
     });
 
+    // bot.login(config.botLogin).then(() => {
+    //   setInterval(saveNearest, periodicity);
+    // });
+
     bot.login(config.botLogin).then(() => {
-      setInterval(saveNearest, periodicity);
+      console.log('Connecté !');
     });
 
-    bot.on('message', async function (message) {
-      switch (message.content) {
-        case '!online':
-          message.reply(await getPlayers());
-          return;
-        case '!notown':
-          message.reply(await noTown());
-          return;
-        default:
-          return;
-      }
+    bot.on('message', message => {
+      (async () => {
+        switch (message.content) {
+          case '!online':
+            message.reply(await getPlayers());
+            return;
+          case '!notown':
+            message.reply(await noTown());
+            return;
+          default:
+            return;
+        }
+      })();
     });
   });
 };

@@ -1,5 +1,5 @@
 import * as mongodb from 'mongodb';
-import {config} from './config';
+import {config} from '../config';
 
 const generateConnectionUrl = (options: typeof config.mongo) =>
   `mongodb://${options.auth.user}:${encodeURIComponent(options.auth.password)}@${options.host}:${options.port}`;
@@ -100,8 +100,6 @@ class MongoClient {
   }
 
   async upsert<T>(collection: string, filter: mongodb.FilterQuery<T>, data: T) {
-    const d = new Date();
-    Object.assign(data, {createdAt: d, updatedAt: d});
     return this.db.collection(collection).updateOne(filter, {$set: data}, {upsert: true});
   }
 
